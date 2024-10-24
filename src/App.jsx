@@ -1,5 +1,5 @@
 import './index.css'
-import InventoryManagement from "./InventoryManagement"
+import InventoryManagement from "./../src/screens/InventoryManagement"
 
 const App = () => {
   return (
