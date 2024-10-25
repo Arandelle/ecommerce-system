@@ -1,26 +1,50 @@
+const express = require('express');
+const cors = require('cors');
+const { MongoClient } = require('mongodb');
+require('dotenv').config();
 
-const { MongoClient, ServerApiVersion } = require('mongodb');
-const uri = "mongodb+srv://arandelle07:NrPCBclFpzQ5Dckh@ecommerce-system.2kuz0.mongodb.net/?retryWrites=true&w=majority&appName=ecommerce-system";
+const app = express();
+const port = 5173;
+const uri = process.env.MONGO_URI;
 
-// Create a MongoClient with a MongoClientOptions object to set the Stable API version
-const client = new MongoClient(uri, {
-  serverApi: {
-    version: ServerApiVersion.v1,
-    strict: true,
-    deprecationErrors: true,
-  }
-});
+// Configure CORS with specific options
+app.use(cors({
+  origin: 'http://localhost:5173', // Vite's default port
+  credentials: true
+}));
+app.use(express.json());
 
-async function run() {
+async function startServer() {
   try {
-    // Connect the client to the server	(optional starting in v4.7)
-    await client.connect();
-    // Send a ping to confirm a successful connection
-    await client.db("admin").command({ ping: 1 });
-    console.log("Pinged your deployment. You successfully connected to MongoDB!");
-  } finally {
-    // Ensures that the client will close when you finish/error
-    await client.close();
+    const client = await MongoClient.connect(uri);
+    console.log('Connected to MongoDB successfully');
+
+    const collection = client.db("ecommerce-system").collection("products");
+
+    // Test route to verify server is responding
+    app.get('/test', (req, res) => {
+      res.json({ message: 'Server is running' });
+    });
+
+    // GET route to fetch all products
+    app.get('/api/products', async (req, res) => {
+      try {
+        const products = await collection.find({}).toArray();
+        console.log('Sending products:', products); // Debug log
+        res.json(products);
+      } catch (error) {
+        console.error('Error fetching products:', error);
+        res.status(500).json({ message: 'Failed to fetch products' });
+      }
+    });
+
+    app.listen(port, () => {
+      console.log(`Server running on port ${port}`);
+    });
+  } catch (err) {
+    console.error('Failed to connect to MongoDB:', err);
+    process.exit(1);
   }
 }
-run().catch(console.dir);
+
+startServer();
