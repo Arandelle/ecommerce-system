@@ -15,7 +15,87 @@ const InventoryManagement = () => {
       quantity: 100,
       status: "in stock",
     },
+    {
+      id: 123,
+      name: "pencil",
+      price: 25,
+      quantity: 100,
+      status: "in stock",
+    },
+    {
+      id: 123,
+      name: "pencil",
+      price: 25,
+      quantity: 100,
+      status: "in stock",
+    },
+    {
+      id: 123,
+      name: "pencil",
+      price: 25,
+      quantity: 100,
+      status: "in stock",
+    },
+    {
+      id: 123,
+      name: "pencil",
+      price: 25,
+      quantity: 100,
+      status: "in stock",
+    },
+    {
+      id: 123,
+      name: "pencil",
+      price: 25,
+      quantity: 100,
+      status: "in stock",
+    },
+
+    {
+      id: 123,
+      name: "pencil",
+      price: 25,
+      quantity: 100,
+      status: "in stock",
+    },
+    {
+      id: 123,
+      name: "pencil",
+      price: 25,
+      quantity: 100,
+      status: "in stock",
+    },
+    {
+      id: 123,
+      name: "pencil",
+      price: 25,
+      quantity: 100,
+      status: "in stock",
+    },
+    {
+      id: 123,
+      name: "pencil",
+      price: 25,
+      quantity: 100,
+      status: "in stock",
+    },
+    {
+      id: 123,
+      name: "pencil",
+      price: 25,
+      quantity: 100,
+      status: "in stock",
+    },
   ];
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const [next, setNext] = useState(false);
+  const itemsPerPage = 10;
+
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = products.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(products.length / itemsPerPage);
 
   const renderRow = (products) => {
     return (
@@ -41,7 +121,14 @@ const InventoryManagement = () => {
         renderRow={renderRow}
         emptyMessage={"Table is empty"}
       />
-      <Pagination />
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        setCurrentPage={setCurrentPage}
+        indexOfFirstItem={indexOfFirstItem}
+        indexOfLastItem={indexOfLastItem}
+        products={products}
+      />
     </div>
   );
 };
